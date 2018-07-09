@@ -27,13 +27,13 @@ a great many page faults when a SQL that uses much memory runs.
     db1=# SELECT * FROM pg_setrlimit('v', 257000000);
      pg_setrlimit
     --------------
-     t
+        257000000
     (1 row)
       
     db1=# SELECT * FROM pg_setrlimit('v', 117000000);
      pg_setrlimit
     --------------
-     t
+        117000000
     (1 row)
      
     db1=# \d

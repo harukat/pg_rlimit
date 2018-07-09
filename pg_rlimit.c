@@ -19,11 +19,11 @@ Datum pg_setrlimit(PG_FUNCTION_ARGS);
 Datum
 pg_getrlimit(PG_FUNCTION_ARGS)
 {
-    text      *res_text;
-    char      *res_csz;
-	int        res;
+    text  *res_text;
+    char  *res_csz;
+	int    res;
     struct rlimit rlim;
-    int        retval;
+    int64  retval;
 
     res_text = PG_GETARG_TEXT_P(0);
     res_csz = text_to_cstring(res_text);
@@ -40,17 +40,20 @@ pg_getrlimit(PG_FUNCTION_ARGS)
 				errmsg("specified resource is not supported")));
 	}
 
-    if (0 != getrlimit(RLIMIT_AS, &rlim))
+    if (0 != getrlimit(res, &rlim))
 		ereport(ERROR,
 			(errcode(ERRCODE_SYSTEM_ERROR),
 			errmsg("getrlimit(2) failed: %m")));
 
 	retval = rlim.rlim_cur;
-	if (retval == -1)
+	if (retval == RLIM_INFINITY)
 		retval = rlim.rlim_max; 
 
-	PG_RETURN_INT32(retval);
+	elog(DEBUG5, "retval = %lld", retval);
+
+	PG_RETURN_INT64(retval);
 }
+
 
 Datum
 pg_setrlimit(PG_FUNCTION_ARGS)
@@ -58,12 +61,15 @@ pg_setrlimit(PG_FUNCTION_ARGS)
     text      *res_text;
     char      *res_csz;
 	int        res;
-    int32      lim;
+    uint64 lim;
+    int64 retval;
     struct rlimit rlim;
 
     res_text = PG_GETARG_TEXT_P(0);
     res_csz = text_to_cstring(res_text);
-    lim = PG_GETARG_INT32(1);
+    lim = PG_GETARG_INT64(1);
+
+	elog(DEBUG5, "lim = %llu", lim);
 
 	switch (res_csz[0])
 	{
@@ -84,11 +90,22 @@ pg_setrlimit(PG_FUNCTION_ARGS)
 
 	rlim.rlim_cur = lim;
 
-    if (0 != setrlimit(RLIMIT_AS, &rlim))
+    if (0 != setrlimit(res, &rlim))
 		ereport(ERROR,
 			(errcode(ERRCODE_SYSTEM_ERROR),
 			errmsg("setrlimit(2) failed: %m")));
 
-	PG_RETURN_BOOL(1);
+    if (0 != getrlimit(res, &rlim))
+		ereport(ERROR,
+			(errcode(ERRCODE_SYSTEM_ERROR),
+			errmsg("getrlimit(2) failed: %m")));
+
+	retval = rlim.rlim_cur;
+	if (retval == RLIM_INFINITY)
+		retval = rlim.rlim_max; 
+
+	elog(DEBUG5, "retval = %lld", retval);
+
+	PG_RETURN_INT64(retval);
 }
 
