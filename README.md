@@ -17,29 +17,27 @@ a great many page faults when a SQL that uses much memory runs.
 ## usage
 
     $ ( ulimit -v 310000 ; pg_ctl start )
-     
-    db1=# SELECT * FROM pg_getrlimit('v');
+    $ psql -U dbuser -d db 
+    db=> SELECT * FROM pg_getrlimit('v');
      pg_getrlimit
     --------------
         317440000
     (1 row)
      
-    db1=# SELECT * FROM pg_setrlimit('v', 257000000);
+    db=> SELECT * FROM pg_setrlimit('v', 257000000);
      pg_setrlimit
     --------------
         257000000
     (1 row)
       
-    db1=# SELECT * FROM pg_setrlimit('v', 117000000);
+    db=> SELECT * FROM pg_setrlimit('v', 117000000);
      pg_setrlimit
     --------------
         117000000
     (1 row)
      
-    db1=# \d
+    db=> \d
     ERROR:  out of memory
-    LINE 12: ORDER BY 1,2;
-                      ^
-    DETAIL:  Failed on request of size 16224.
-
-
+    DETAIL:  Failed on request of size 24.
+    
+    db=> \q
