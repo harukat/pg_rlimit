@@ -29,6 +29,7 @@ void
 value_v_assign(int newval, void *extra)
 {
 	struct rlimit rlim;
+	int64  lim = newval;
 
 	elog(DEBUG1, "pg_rlimit value_v_assign: %d (kB)", newval);
 
@@ -37,10 +38,10 @@ value_v_assign(int newval, void *extra)
 			(errcode(ERRCODE_SYSTEM_ERROR),
 			errmsg("getrlimit(2) failed: %m")));
 
-	if (newval < 0)
+	if (lim < 0)
 		rlim.rlim_cur = RLIM_INFINITY;
 	else
-		rlim.rlim_cur = (newval << 10 );
+		rlim.rlim_cur = (lim << 10 );
 
 	if (0 != setrlimit(RLIMIT_AS, &rlim))
 		ereport(ERROR,
