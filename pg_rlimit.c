@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include <limits.h>
 
 #include "postgres.h"
 #include "fmgr.h"
