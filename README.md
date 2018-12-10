@@ -63,21 +63,21 @@ pg_rlimit now supports only RLIMIT_AS (Max address space).
     $ pg_ctl restart
     $ psql -U dbuser -d db
      
-    db1=# SHOW pg_rlimit.v;
+    db=> SHOW pg_rlimit.v;
      pg_rlimit.v
     -------------
      1GB
     (1 row)
           
-    db1=# SET pg_rlimit.v TO '512MB';
+    db=> SET pg_rlimit.v TO '512MB';
     SET
-    db1=# SHOW pg_rlimit.v;
+    db=> SHOW pg_rlimit.v;
      pg_rlimit.v
     -------------
      512MB
     (1 row)
     
-    db1=# SELECT * FROM pg_getrlimit('v');
+    db=> SELECT * FROM pg_getrlimit('v');
      pg_getrlimit
     --------------
         536870912
