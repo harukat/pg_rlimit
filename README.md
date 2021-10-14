@@ -4,8 +4,8 @@ pg_rlimit
 pg_rlimit is an extension that provides interface for setrlimit(2)
 and getrlimit(2) by GUC parameters and SQL functions.
 
-This can be used to avoid OS breakdown by invoking OOM killer or
-a great many page faults when a SQL that uses much memory runs.
+Both ulimit -v and systemd LimitAS apply to all PostgreSQL processes,
+but this extension allows them to be applied on a per-session basis.
 
 ## requirements and limitation
 
