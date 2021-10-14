@@ -12,7 +12,7 @@ a great many page faults when a SQL that uses much memory runs.
 pg_rlimit needs setrlimit(2) and getrlimit(2) for OS systemcall.
 
 pg_rlimit uses ClientAuthentication_hook for the PostgreSQL source.
-PostgreSQL 9.3.x to 10.x are supported.
+PostgreSQL 9.3.x to 14.x are supported.
 
 pg_rlimit now supports only RLIMIT_AS (Max address space).
 
