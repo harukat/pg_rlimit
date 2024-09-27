@@ -107,16 +107,20 @@ pg_getrlimit(PG_FUNCTION_ARGS)
 	res_text = PG_GETARG_TEXT_P(0);
 	res_csz = text_to_cstring(res_text);
 
+	if (res_csz[1] != '\0')
+		ereport(ERROR,
+			(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
+			errmsg("specified resource is not supported")));
+
 	switch (res_csz[0])
 	{
 		case 'v':
 			res = RLIMIT_AS;
-			if (res_csz[1] == '\0')
-				break;
+			break;
 		default:
 			ereport(ERROR,
 				(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-				errmsg("specified resource is not supported")));
+				errmsg("specified resource \"%s\" is not supported", res_csz)));
 	}
 
 	if (0 != getrlimit(res, &rlim))
@@ -156,16 +160,20 @@ pg_setrlimit(PG_FUNCTION_ARGS)
 
 	elog(DEBUG5, "pg_setrlimit(%lld) called", (long long int) lim);
 
+	if (res_csz[1] != '\0')
+		ereport(ERROR,
+			(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
+			errmsg("specified resource is not supported")));
+
 	switch (res_csz[0])
 	{
 		case 'v':
 			res = RLIMIT_AS;
-			if (res_csz[1] == '\0')
-				break;
+			break;
 		default:
 			ereport(ERROR,
 				(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-				errmsg("specified resource is not supported")));
+				errmsg("specified resource \"%s\" is not supported", res_csz)));
 	}
 
 	if (0 != getrlimit(res, &rlim))

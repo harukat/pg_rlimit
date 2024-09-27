@@ -1,7 +1,7 @@
-pg_rlimit
+pg\_rlimit
 =========
 
-pg_rlimit is an extension that provides interface for setrlimit(2)
+pg\_rlimit is an extension that provides interface for setrlimit(2)
 and getrlimit(2) by GUC parameters and SQL functions.
 
 Both ulimit -v and systemd LimitAS apply to all PostgreSQL processes,
@@ -9,12 +9,12 @@ but this extension allows them to be applied on a per-session basis.
 
 ## requirements and limitation
 
-pg_rlimit needs setrlimit(2) and getrlimit(2) for OS systemcall.
+pg\_rlimit needs setrlimit(2) and getrlimit(2) for OS systemcall.
 
-pg_rlimit uses ClientAuthentication_hook for the PostgreSQL source.
-PostgreSQL 9.3.x to 14.x are supported.
+pg\_rlimit uses ClientAuthentication\_hook for the PostgreSQL source.
+PostgreSQL 9.3.x to 17.x are supported.
 
-pg_rlimit now supports only RLIMIT_AS (Max address space).
+pg\_rlimit now supports only RLIMIT\_AS (Max address space).
 
 ## install
 
@@ -46,10 +46,10 @@ pg_rlimit now supports only RLIMIT_AS (Max address space).
         117000000
     (1 row)
      
-    db=> \d
+    db=> SELECT length(repeat(string_agg(md5(g::text), ','),1024)) FROM generate_series(1, 10000) g;
     ERROR:  out of memory
-    DETAIL:  Failed on request of size 24.
-    
+    DETAIL:  Failed on request of size 337918980 in memory context "ExprContext".
+
     db=> \q
 
 
@@ -81,6 +81,6 @@ pg_rlimit now supports only RLIMIT_AS (Max address space).
      pg_getrlimit
     --------------
         536870912
-    (1 行)
+    (1 row)
 
 
