@@ -1,0 +1,46 @@
+SELECT setting ~ 'pg_rlimit' FROM pg_settings WHERE name = 'shared_preload_libraries';
+ ?column? 
+----------
+ t
+(1 row)
+
+\echo precondition: shared_preload_libraries = 'pg_rlimit'
+precondition: shared_preload_libraries = pg_rlimit
+SHOW pg_rlimit.v ;
+ pg_rlimit.v 
+-------------
+ -1
+(1 row)
+
+SELECT length(repeat(string_agg(md5(g::text), ','),1024)) FROM generate_series(1, 10000) g;
+  length   
+-----------
+ 337918976
+(1 row)
+
+SET pg_rlimit.v TO '1GB';
+SHOW pg_rlimit.v ;
+ pg_rlimit.v 
+-------------
+ 1GB
+(1 row)
+
+SET pg_rlimit.v TO '100MB';
+SHOW pg_rlimit.v ;
+ pg_rlimit.v 
+-------------
+ 100MB
+(1 row)
+
+SELECT length(repeat(string_agg(md5(g::text), ','),1024)) FROM generate_series(1, 10000) g;
+ERROR:  out of memory
+DETAIL:  Failed on request of size 20 in memory context "tuplestore tuples".
+\echo You can ignore the diff of detail messages
+You can ignore the diff of detail messages
+SET pg_rlimit.v TO '-1';
+SHOW pg_rlimit.v ;
+ pg_rlimit.v 
+-------------
+ -1
+(1 row)
+

@@ -1,0 +1,29 @@
+SELECT * FROM pg_setrlimit('v', -1);
+ pg_setrlimit 
+--------------
+           -1
+(1 row)
+
+SELECT * FROM pg_getrlimit('v');
+ pg_getrlimit 
+--------------
+           -1
+(1 row)
+
+SELECT * FROM pg_setrlimit('v', 512 * 1024 * 1024);
+ pg_setrlimit 
+--------------
+    536870912
+(1 row)
+
+SELECT * FROM pg_getrlimit('v');
+ pg_getrlimit 
+--------------
+    536870912
+(1 row)
+
+SELECT length(repeat(string_agg(md5(g::text), ','),1024)) FROM generate_series(1, 10000) g;
+ERROR:  out of memory
+DETAIL:  Failed on request of size 337918980 in memory context "ExprContext".
+\echo You can ignore the diff of detail messages
+You can ignore the diff of detail messages

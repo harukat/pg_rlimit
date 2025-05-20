@@ -1,0 +1,5 @@
+CREATE EXTENSION pg_rlimit;
+\! ulimit -v
+unlimited
+\echo precondition: ulimit -v is unlimited(-1)
+precondition: ulimit -v is unlimited(-1)
