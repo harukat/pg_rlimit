@@ -12,7 +12,7 @@ but this extension allows them to be applied on a per-session basis.
 pg\_rlimit needs setrlimit(2) and getrlimit(2) for OS systemcall.
 
 pg\_rlimit uses ClientAuthentication\_hook for the PostgreSQL source.
-PostgreSQL 9.3.x to 17.x are supported.
+PostgreSQL 9.3.x to 18.x are supported.
 
 pg\_rlimit now supports only RLIMIT\_AS (Max address space).
 
@@ -26,15 +26,15 @@ pg\_rlimit now supports only RLIMIT\_AS (Max address space).
 
 ### usage by functions
 
-    $ ( ulimit -v 310000 ; pg_ctl start )
+    $ ( ulimit -v 310000 ; pg_ctl start ) ## by kB
     $ psql -U dbuser -d db 
-    db=> SELECT * FROM pg_getrlimit('v');
+    db=> SELECT * FROM pg_getrlimit('v'); -- by bytes
      pg_getrlimit
     --------------
         317440000
     (1 row)
      
-    db=> SELECT * FROM pg_setrlimit('v', 257000000);
+    db=> SELECT * FROM pg_setrlimit('v', 257000000); -- by bytes
      pg_setrlimit
     --------------
         257000000
@@ -83,4 +83,9 @@ pg\_rlimit now supports only RLIMIT\_AS (Max address space).
         536870912
     (1 row)
 
+
+### Note
+
+"Max address space" includes the size of the shared buffer in use.
+It is not possible to limit only the use of private memory by backend processes.
 
